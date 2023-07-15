@@ -1,3 +1,6 @@
+import io
+import json
+import pickle
 from abc import ABC, abstractmethod
 from typing import Dict
 
@@ -7,6 +10,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import auc, precision_recall_curve, roc_curve
 
 from .logger import get_logger
+from .object_storage import ObjectStorage
 
 log = get_logger(logger_name="data_pipeline")
 
@@ -48,7 +52,39 @@ class SklearnTrain(Train):
         average_precision = auc(recall, precision)
 
         return {
-            "accuracy": accuracy,
-            "roc_auc": roc_auc,
-            "average_precision": average_precision,
+            "accuracy": float(accuracy),
+            "roc_auc": float(roc_auc),
+            "average_precision": float(average_precision),
         }
+
+    def model_save(
+        self,
+        object_storage: ObjectStorage,
+        bucket_name,
+        training_time,
+        model: BaseEstimator,
+        metrics: Dict[str, float],
+    ) -> None:
+        # save model
+        model_pickle = pickle.dumps(model)
+        model_stream = io.BytesIO(model_pickle)
+        object_storage.save(
+            bucket_name=bucket_name,
+            object_name="model-{training_time}/model.pickle".format(
+                training_time=training_time
+            ),
+            bytes_data=model_stream,
+            data_length=len(model_pickle),
+        )
+
+        # save metrics
+        metrics_json = json.dumps(metrics).encode("utf-8")
+        metrics_stream = io.BytesIO(metrics_json)
+        object_storage.save(
+            bucket_name=bucket_name,
+            object_name="model-{training_time}/metrics.json".format(
+                training_time=training_time
+            ),
+            bytes_data=metrics_stream,
+            data_length=len(metrics_json),
+        )

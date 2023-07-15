@@ -1,15 +1,6 @@
 import os
-from dataclasses import dataclass
 
-
-@dataclass
-class DBServerInfo:
-    host: str
-    port: str
-    database: str
-    username: str
-    password: str
-
+from data_templates import DBServerInfo
 
 olap_server_info = DBServerInfo(
     host=os.getenv("olap_host", "localhost"),
@@ -28,21 +19,11 @@ cache_server_info = DBServerInfo(
 )
 object_storage_server_info = DBServerInfo(
     host=os.getenv("object_storage_host", "localhost"),
-    port=os.getenv("object_storage_info", "localhost"),
-    database=os.getenv("object_storage_info", "localhost"),
-    username=os.getenv("minio_access_key", "dsp"),
-    password=os.getenv("minio_secret_key", "dsppassword"),
+    port=os.getenv("object_storage_info", "9000"),
+    database=os.getenv("object_storage_database", "object"),
+    username=os.getenv("object_storage_username", "dsp"),
+    password=os.getenv("object_storage_password", "dsppassword"),
 )
-
-train_method = os.getenv("train_method", "sklearn")
-data_pipeline_method = os.getenv("data_pipeline_method", "postgres")
-model_saver_method = os.getenv("model_saver_method", "minio")
-
-minio_server_info = {
-    "uri": os.getenv("minio_uri", "localhost:9000"),
-    "access_key": os.getenv("minio_access_key", "dsp"),
-    "secret_key": os.getenv("minio_secret_key", "dsppassword"),
-}
 
 data_columns = [
     "ad_id",
