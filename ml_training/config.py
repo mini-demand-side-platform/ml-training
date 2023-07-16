@@ -1,6 +1,6 @@
 import os
 
-from data_templates import DBServerInfo
+from .data_templates import DBServerInfo
 
 olap_server_info = DBServerInfo(
     host=os.getenv("olap_host", "localhost"),
