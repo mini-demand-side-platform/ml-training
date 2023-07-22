@@ -7,6 +7,7 @@ from .config import (
     olap_server_info,
 )
 from .data_pipeline import DataPipeline, PostgresDataPipeline
+from .data_templates import TrainModelInput
 from .logger import get_logger
 from .object_storage import MinioObjectStorage, ObjectStorage
 from .train import SklearnTrain, Train
@@ -14,12 +15,7 @@ from .train import SklearnTrain, Train
 log = get_logger(logger_name="main")
 
 app = FastAPI()
-data_pipeline = PostgresDataPipeline(
-    db_server_info=olap_server_info,
-    feature_table_name="top_10_features",
-    label_table_name="ctr",
-    label_column_name="was_click",
-)
+
 train = SklearnTrain()
 object_storage = MinioObjectStorage(db_server_info=object_storage_server_info)
 
@@ -48,7 +44,15 @@ def training_process(
 
 
 @app.post("/model_training")
-async def train_model(background_tasks: BackgroundTasks) -> bool:
+async def train_model(
+    background_tasks: BackgroundTasks, train_model_input: TrainModelInput
+) -> bool:
+    data_pipeline = PostgresDataPipeline(
+        db_server_info=olap_server_info,
+        feature_table_name=train_model_input.feature_table_name,
+        label_table_name=train_model_input.label_table_name,
+        label_column_name=train_model_input.label_column_name,
+    )
     background_tasks.add_task(training_process, data_pipeline, train, object_storage)
     return True
 

@@ -24,22 +24,3 @@ object_storage_server_info = DBServerInfo(
     username=os.getenv("object_storage_username", "dsp"),
     password=os.getenv("object_storage_password", "dsppassword"),
 )
-
-data_columns = [
-    "ad_id",
-    "status",
-    "bidding_cpc",
-    "advertiser",
-    "banner_style",
-    "category",
-    "height",
-    "width",
-    "item_price",
-    "layout_style",
-    "hist_ctr",
-    "hist_cvr",
-    "was_click",
-]
-
-
-target_features = "was_click"
