@@ -1,6 +1,6 @@
 ![Build](https://github.com/mini-demand-side-platform/ml-training/workflows/build/badge.svg)
 # ML Training
-This is the machine learning training moudle in the [mini-demand-side-platform](https://github.com/mini-demand-side-platform/mini-demand-side-platform).
+This is the machine learning training module of the [mini-demand-side-platform](https://github.com/mini-demand-side-platform/mini-demand-side-platform).
 
 It trains the  click-through-rate (CTR) prediction model using historical data with [custom feature store service](https://github.com/mini-demand-side-platform/feature-store). Check the [notebooks](https://github.com/mini-demand-side-platform/research), if you want to see more detail of the modeling process.
 
@@ -19,13 +19,13 @@ curl -X 'POST' \
     "label_column_name": "was_click"
   }'
 ```
-## Requirments
+## Requirements
 - Docker 
 - Docker-compose 
 - make
 ## Setup
 If you want to run this training module on docker, please follow the instruction below.
-#### 1. Active databases
+#### 1. Activate databases 
 ```bash
 git clone git@github.com:mini-demand-side-platform/databases.git
 cd databases 
