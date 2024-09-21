@@ -44,7 +44,7 @@ def training_process(
 
 
 @app.post("/model_training")
-async def train_model(
+def train_model(
     background_tasks: BackgroundTasks, train_model_input: TrainModelInput
 ) -> bool:
     data_pipeline = PostgresDataPipeline(
